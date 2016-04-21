@@ -1,6 +1,6 @@
 {
   "name": "redis.auth",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A non prescriptive Redis Authentication module for Express",
   "main": "index.js",
   "scripts": {

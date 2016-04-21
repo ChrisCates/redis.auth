@@ -45,6 +45,7 @@ module.exports.auth = function(permissions) {
     } else {
       //If we do have a token in the header...
       redis.get(req.headers[config.header], function(err,response) {
+        req.auth = response
         if (err) {
           if (config.returnError == true) {
             return res.status(500).send({

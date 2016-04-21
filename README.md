@@ -58,6 +58,7 @@ app.get("/user", auth(["user", "admin"]), function(req,res) {
 #### With returnError = true
 
 ```
+req.auth = {Redis Object}
 return res.status(403).send({
   "error": true,
   "status": 403,
@@ -68,6 +69,7 @@ return res.status(403).send({
 #### With returnError = false
 
 ```
+req.auth = {Redis Object}
 //Sets these variables in req so you can check for them on your own
 req.error = true
 req.errorType = "No "+config.header+" header supplied..."

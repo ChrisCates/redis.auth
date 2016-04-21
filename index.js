@@ -59,24 +59,37 @@ module.exports.auth = function(permissions) {
             return next()
           }
         } else {
-          if (permissions.indexOf(response[config.key]) !== -1) {
-            //The user is authorized...
-            return next()
+          //Check permissions via grant type
+          if (Array.isArray(permissions)) {
+            var valid = false
+            permissions.map(function(p) {
+              if (p == response[config.key]) {
+                return next()
+              } else {
+                return false
+              }
+            })
           } else {
-            //Elsewise throw an error that they aren't authorized...
-            if (config.returnError == true) {
-              return res.status(403).send({
-                "error": true,
-                "status": 403,
-                "message": "Incorrect permissions supplied..."
-              })
-            } else {
-              req.error = true
-              req.errorType = "Incorrect permissions supplied..."
-              req.errorCode = 403
+            if (permissions === response[config.key]) {
+              //The user is authorized...
               return next()
             }
           }
+
+          //Elsewise throw an error that they aren't authorized...
+          if (config.returnError == true) {
+            return res.status(403).send({
+              "error": true,
+              "status": 403,
+              "message": "Incorrect permissions supplied..."
+            })
+          } else {
+            req.error = true
+            req.errorType = "Incorrect permissions supplied..."
+            req.errorCode = 403
+            return next()
+          }
+
         }
       })
     }

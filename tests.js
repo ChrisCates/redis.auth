@@ -58,6 +58,19 @@ app.post("/new", function(req,res) {
   )
 })
 
+app.post("/new2", function(req,res) {
+  redis.generate(
+    {
+    "user": "bob",
+    "grantType": "admin"
+    },
+    function(err, token) {
+      if (err) return res.status(500).send(err)
+      return res.status(200).send(token)
+    }
+  )
+})
+
 app.get("/auth", auth("user"), function(req,res) {
   return res.status(200).send("Authorized :)")
 })
@@ -71,6 +84,7 @@ app.get("/free", function(req,res) {
 })
 
 var token = ""
+var token2
 
 //UNIT TEST
 describe('Redis Auth', function() {
@@ -97,11 +111,33 @@ describe('Redis Auth', function() {
 
     })
 
+    it('Generate a token for admin', function (done) {
+
+      request(app)
+        .post("/new2")
+        .expect(200)
+        .end(function(err,res) {
+          if (err) throw err
+          token2 = res.body.token
+          done()
+        })
+
+    })
+
     it('Authenticate with middleware', function (done) {
 
       request(app)
         .get("/auth")
         .set("Authorization", token)
+        .expect(200, "Authorized :)", done)
+
+    })
+
+    it('Authenticate with middleware for admin', function (done) {
+
+      request(app)
+        .get("/auth_admin")
+        .set("Authorization", token2)
         .expect(200, "Authorized :)", done)
 
     })
@@ -141,6 +177,24 @@ describe('Redis Auth', function() {
     app.get("/auth2_admin", auth2("admin"), function(req,res) {
       if (req.errorCode == 403) return res.status(req.errorCode).send("Unauthorized...")
       return res.status(200).send("Authorized :)")
+    })
+
+    it('Authenticate with middleware', function (done) {
+
+      request(app)
+        .get("/auth2")
+        .set("Authorization", token)
+        .expect(200, "Authorized :)", done)
+
+    })
+
+    it('Authenticate with middleware for admin', function (done) {
+
+      request(app)
+        .get("/auth2_admin")
+        .set("Authorization", token2)
+        .expect(200, "Authorized :)", done)
+
     })
 
     it('Should return a 403 - No header supplied', function (done) {

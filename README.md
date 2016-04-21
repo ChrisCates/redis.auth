@@ -30,6 +30,30 @@ var auth = require("redis.auth")(redis, {
 })
 ```
 
+### Example Express middleware
+```
+var express = require("express")
+var app = express()
+
+var auth = require("redis.auth")()
+
+//Example single user permission
+app.get("/user", auth("user"), function(req,res) {
+  return res.status(200).send("Only users can access this...")
+})
+
+//Example multi user permission
+app.get("/user", auth(["user", "admin"]), function(req,res) {
+  return res.status(200).send("Admins and users can access this...")
+})
+
+/*
+** Assuming the following is in the redis token
+** { grantType: user }
+** And the header has a valid Redis token...
+*/
+```
+
 ### Example status returns:
 #### With returnError = true
 

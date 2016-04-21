@@ -64,11 +64,15 @@ module.exports.auth = function(permissions) {
             var valid = false
             permissions.map(function(p) {
               if (p == response[config.key]) {
-                return next()
+                valid = true
               } else {
                 return false
               }
             })
+            //The user is authorized
+            if (valid === true) {
+              return next()
+            }
           } else {
             if (permissions === response[config.key]) {
               //The user is authorized...

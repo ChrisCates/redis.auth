@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/ChrisCates/redis.auth.svg?branch=master)](https://travis-ci.org/ChrisCates/redis.auth)
 [![Coverage Status](https://coveralls.io/repos/github/ChrisCates/redis.auth/badge.svg?branch=master)](https://coveralls.io/github/ChrisCates/redis.auth?branch=master)
+![Codeship](https://codeship.com/projects/e9ba3640-ecd4-0133-dc4a-56fc93ede3cf/status?branch=master)
 
 [![NPM](https://nodei.co/npm/redis.auth.png)](https://nodei.co/npm/redis.auth/)
 

@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/ChrisCates/redis.auth.svg?branch=master)](https://travis-ci.org/ChrisCates/redis.auth)
 [![Coverage Status](https://coveralls.io/repos/github/ChrisCates/redis.auth/badge.svg?branch=master)](https://coveralls.io/github/ChrisCates/redis.auth?branch=master)
 ![Codeship](https://codeship.com/projects/e9ba3640-ecd4-0133-dc4a-56fc93ede3cf/status?branch=master)
-[![Windows Tests](https://img.shields.io/appveyor/ci/ChrisCates/redis.auth/master.svg?label=Windows%20Tests)](https://ci.appveyor.com/project/ChrisCates/redis.auth/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/fjbdiqdarn2wyjm7?svg=true)](https://ci.appveyor.com/project/ChrisCates/redis-auth)
 
 [![NPM](https://nodei.co/npm/redis.auth.png)](https://nodei.co/npm/redis.auth/)
 

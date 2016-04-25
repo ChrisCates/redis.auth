@@ -18,7 +18,7 @@ npm install redis.auth --save
 
 Note that it requires redis.token npm module to work properly
 
-```
+``` javascript
 var redis = require("redis.token")()
 var auth = require("redis.auth")(redis, {
   //Check for which Express header use when authenticating the client
@@ -31,10 +31,36 @@ var auth = require("redis.auth")(redis, {
 })
 ```
 
+### Example Express middleware
+``` javascript
+var express = require("express")
+var app = express()
+
+var auth = require("redis.auth")()
+
+//Example single user permission
+app.get("/user", auth("user"), function(req,res) {
+  //req.auth = stored Redis.Token Object
+  return res.status(200).send("Only users can access this...")
+})
+
+//Example multi user permission
+app.get("/user", auth(["user", "admin"]), function(req,res) {
+  //req.auth = stored Redis.Token Object 
+  return res.status(200).send("Admins and users can access this...")
+})
+
+/*
+** Assuming the following is in the redis token
+** { grantType: user }
+** And the header has a valid Redis token...
+*/
+```
+
 ### Example status returns:
 #### With returnError = true
 
-```
+``` javascript
 return res.status(403).send({
   "error": true,
   "status": 403,
@@ -44,7 +70,7 @@ return res.status(403).send({
 
 #### With returnError = false
 
-```
+``` javascript
 //Sets these variables in req so you can check for them on your own
 req.error = true
 req.errorType = "No "+config.header+" header supplied..."

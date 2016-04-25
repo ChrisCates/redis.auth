@@ -26,9 +26,7 @@ require.searchCache = function (moduleName, callback) {
         (function run(mod) {
             // Go over each of the module's children and
             // run over it
-            mod.children.forEach(function (child) {
-                run(child);
-            });
+            mod.children.forEach(function (child) { run(child); });
 
             // Call the specified callback providing the
             // found module
@@ -75,6 +73,10 @@ app.get("/auth", auth("user"), function(req,res) {
   return res.status(200).send("Authorized :)")
 })
 
+app.get("/auth_multi", auth(["user", "admin"]), function(req,res) {
+  return res.status(200).send("Authorized :)")
+})
+
 app.get("/auth_admin", auth("admin"), function(req,res) {
   return res.status(200).send("Authorized :)")
 })
@@ -84,7 +86,7 @@ app.get("/free", function(req,res) {
 })
 
 var token = ""
-var token2
+var token2 = ""
 
 //UNIT TEST
 describe('Redis Auth', function() {
@@ -133,10 +135,28 @@ describe('Redis Auth', function() {
 
     })
 
+    it('Authenticate with middleware - multi user', function (done) {
+
+      request(app)
+        .get("/auth_multi")
+        .set("Authorization", token)
+        .expect(200, "Authorized :)", done)
+
+    })
+
     it('Authenticate with middleware for admin', function (done) {
 
       request(app)
         .get("/auth_admin")
+        .set("Authorization", token2)
+        .expect(200, "Authorized :)", done)
+
+    })
+
+    it('Authenticate with middleware for admin - multi user', function (done) {
+
+      request(app)
+        .get("/auth_multi")
         .set("Authorization", token2)
         .expect(200, "Authorized :)", done)
 
@@ -174,6 +194,11 @@ describe('Redis Auth', function() {
       return res.status(200).send("Authorized :)")
     })
 
+    app.get("/auth2_multi", auth2(["user", "admin"]), function(req,res) {
+      if (req.errorCode == 403) return res.status(req.errorCode).send("Unauthorized...")
+      return res.status(200).send("Authorized :)")
+    })
+
     app.get("/auth2_admin", auth2("admin"), function(req,res) {
       if (req.errorCode == 403) return res.status(req.errorCode).send("Unauthorized...")
       return res.status(200).send("Authorized :)")
@@ -188,10 +213,28 @@ describe('Redis Auth', function() {
 
     })
 
+    it('Authenticate with middleware - multi user', function (done) {
+
+      request(app)
+        .get("/auth2_multi")
+        .set("Authorization", token)
+        .expect(200, "Authorized :)", done)
+
+    })
+
     it('Authenticate with middleware for admin', function (done) {
 
       request(app)
         .get("/auth2_admin")
+        .set("Authorization", token2)
+        .expect(200, "Authorized :)", done)
+
+    })
+
+    it('Authenticate with middleware for admin - multi user', function (done) {
+
+      request(app)
+        .get("/auth2_multi")
         .set("Authorization", token2)
         .expect(200, "Authorized :)", done)
 
@@ -211,6 +254,21 @@ describe('Redis Auth', function() {
         .get("/auth2_admin")
         .set("Authorization", token)
         .expect(403, done)
+
+    })
+
+  })
+
+  describe("With no redis token", function() {
+
+    it("Should uncache redis.token and redis.auth", function(done) {
+
+      require.uncache("redis.token")
+      require.uncache("./index.js")
+
+      var auth3 = require("./index.js")()
+
+      done()
 
     })
 

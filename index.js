@@ -43,23 +43,12 @@ module.exports.auth = function(permissions) {
         return next()
       }
     } else {
+      console.log("getting")
       //If we do have a token in the header...
       redis.get(req.headers[config.header], function(err,response) {
+        console.log("success")
         req.auth = response
-        if (err) {
-          if (config.returnError == true) {
-            return res.status(500).send({
-              "error": true,
-              "status": 500,
-              "message": "Redis error..."
-            })
-          } else {
-            req.error = true
-            req.errorType = "Redis error..."
-            req.errorCode = 500
-            return next()
-          }
-        } else {
+        if (err) { return res.status(500).send(err) } else {
           //Check permissions via grant type
           if (Array.isArray(permissions)) {
             var valid = false

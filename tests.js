@@ -26,9 +26,7 @@ require.searchCache = function (moduleName, callback) {
         (function run(mod) {
             // Go over each of the module's children and
             // run over it
-            mod.children.forEach(function (child) {
-                run(child);
-            });
+            mod.children.forEach(function (child) { run(child); });
 
             // Call the specified callback providing the
             // found module
@@ -88,7 +86,7 @@ app.get("/free", function(req,res) {
 })
 
 var token = ""
-var token2
+var token2 = ""
 
 //UNIT TEST
 describe('Redis Auth', function() {
@@ -256,6 +254,21 @@ describe('Redis Auth', function() {
         .get("/auth2_admin")
         .set("Authorization", token)
         .expect(403, done)
+
+    })
+
+  })
+
+  describe("With no redis token", function() {
+
+    it("Should uncache redis.token and redis.auth", function(done) {
+
+      require.uncache("redis.token")
+      require.uncache("./index.js")
+
+      var auth3 = require("./index.js")()
+
+      done()
 
     })
 

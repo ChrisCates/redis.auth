@@ -1,0 +1,36 @@
+# Test against this version of Node.js
+environment:
+  nodejs_version: "5"
+
+platform: Any CPU
+shallow_clone: true
+
+
+# Install scripts. (runs after repo cloning)
+install:
+  # Install the Redis
+  - nuget install redis-64 -excludeversion
+  - redis-64\tools\redis-server.exe --service-install
+  - redis-64\tools\redis-server.exe --service-start
+  - '@ECHO Redis Started'
+  # Get the latest stable version of Node 0.STABLE.latest
+  - ps: Install-Product node $env:nodejs_version
+  # install modules
+  - npm install
+  - npm install hiredis --msvs_version=2013
+  - npm install mocha -g
+
+# Post-install test scripts.
+test_script:
+  # Output useful info for debugging.
+  - node --version
+  - npm --version
+  # run tests
+  - npm test
+
+os:
+  - Default Azure
+  - Windows Server 2012 R2
+
+# Don't actually build.
+build: off

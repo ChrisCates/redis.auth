@@ -15,7 +15,7 @@
 npm install redis.auth --save
 ```
 
-### Run via Docker
+### Run via tests Docker
 
 ```
 docker pull chriscates/redis.auth

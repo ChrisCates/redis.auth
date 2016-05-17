@@ -5,3 +5,4 @@ RUN         npm install redis.token redis.auth
 EXPOSE      6379
 ENTRYPOINT  ["/usr/bin/redis-server"]
 CMD         ["npm test"]
+CMD         ["npm nyc"]

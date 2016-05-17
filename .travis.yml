@@ -3,17 +3,11 @@ sudo: required
 services:
   - docker
 
-language: node_js
-
-node_js:
-  - "5"
-
-services:
-  - redis-server
+before_install:
+  - docker pull chriscates/redis.auth
 
 before_script:
   - npm install -g mocha
 
 script:
-  - npm test
   - npm run nyc

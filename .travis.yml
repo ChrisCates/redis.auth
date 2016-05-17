@@ -5,6 +5,7 @@ services:
 
 before_install:
   - docker pull chriscates/redis.auth
+  - docker run chriscates/redis.auth
 
 before_script:
   - npm install -g mocha

@@ -15,6 +15,12 @@
 npm install redis.auth --save
 ```
 
+### Run via Docker
+
+```
+docker pull chriscates/redis.auth
+```
+
 ### Configuration
 
 Note that it requires redis.token npm module to work properly
